@@ -11,6 +11,9 @@ from django.contrib.auth import login,logout,authenticate
 from .models import Profile
 from .forms import ProfileForm,SignUpForm
 
+#Messages
+from django.contrib import messages
+
 # Create your views here.
 def sign_up(request):
     form = SignUpForm()
@@ -18,6 +21,7 @@ def sign_up(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"Account Created Successfully!")
             return HttpResponseRedirect(reverse('login_app:login'))
     diction = {'form':form}
     return render(request,'login_app/signup.html',context=diction)
@@ -39,6 +43,7 @@ def login_user(request):
 @login_required
 def logout_user(request):
     logout(request)
+    messages.warning(request,"You are logged out!!")
     return HttpResponse('Logged out')
 
 @login_required
@@ -49,6 +54,7 @@ def user_profile(request):
         form = ProfileForm(request.POST,instance=profile)
         if form.is_valid():
             form.save()
+            messages.success(request,"Profile Updated!!")
             form = ProfileForm(instance=profile)
     diction = {'form':form}
     return render(request,'login_app/changeprofile.html',context=diction)
