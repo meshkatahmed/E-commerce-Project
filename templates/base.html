@@ -10,7 +10,8 @@
     <title>{% block title_block %}E-commerce{% endblock %}</title>
   </head>
   <body>
-    <div class="container" style="padding-top:15px">
+    {% include 'navbar.html' %}
+    <div class="container">
       <div class="messages container mt-2">
         {% if messages %}
           {% for message in messages %}
