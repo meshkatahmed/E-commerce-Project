@@ -41,3 +41,24 @@ def cart_view(request):
     else:
         messages.warning(request,"You don't have any item in your cart!")
         return redirect('shop_app:home')
+
+@login_required
+def remove_from_cart(request,pk):
+    item = get_object_or_404(Product,pk=pk)
+    order_qs = Order.objects.filter(user=request.user,ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+        if order.orderitems.filter(item=item).exists():
+            items_to_remove = Cart.objects.filter(item=item,user=request.user,purchased=False)
+            item_to_remove = items_to_remove[0]
+            order.orderitems.remove(item_to_remove)
+            item_to_remove.delete()
+            messages.warning(request,"This item is removed from your cart")
+            return redirect('order_app:cart')
+        else:
+            messages.info(request,"This item is not available in your cart")
+            return redirect('shop_app:home')
+    else:
+        messages.info(request,"You don't have an active order")
+        return redirect('shop_app:home')
