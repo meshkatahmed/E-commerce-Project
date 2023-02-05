@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 #Models and Forms
-from order_app.models import Order
+from order_app.models import Order,Cart
 from .models import BillingAddress
 from .forms import BillingForm
 #Decorators
@@ -13,6 +14,7 @@ import requests
 from sslcommerz_python.payment import SSLCSession
 from decimal import Decimal
 import socket
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required
@@ -80,7 +82,43 @@ def payment(request):
     response_data = mypayment.init_payment()
     return redirect(response_data['GatewayPageURL'])
 
-@login_required
+@csrf_exempt
 def complete(request):
+    if request.method=='POST' or request.method=='post':
+         payment_data = request.POST
+         status = payment_data['status']
+
+         if status == 'VALID':
+             val_id =  payment_data['val_id']
+             tran_id = payment_data['tran_id']
+             messages.success(request,"Your payment is completed successfully!")
+             return HttpResponseRedirect(reverse('payment_app:purchase',
+             kwargs={'val_id':val_id,'tran_id':tran_id}))
+         elif status == 'FAILED':
+             messages.warning(request,'Your payment is failed. Please, try again!')
     diction = {}
     return render(request,'payment_app/complete.html',context=diction)
+
+@login_required
+def purchase(request,val_id,tran_id):
+    order_qs = Order.objects.filter(user=request.user,ordered=False)
+    order = order_qs[0]
+    order.ordered = True
+    order.orderId = tran_id
+    order.paymentId = val_id
+    order.save()
+    cart_items = Cart.objects.filter(user=request.user,purchased=False)
+    for item in cart_items:
+        item.purchased = True
+        item.save()
+    return redirect('shop_app:home')
+
+@login_required
+def order_view(request):
+    try:
+        orders = Order.objects.filter(user=request.user,ordered=True)
+        diction = {'orders':orders}
+    except:
+        messages.warning(request,"You didn't order before!!")
+        return redirect('shop_app:home')
+    return render(request,'payment_app/order.html',context=diction)
