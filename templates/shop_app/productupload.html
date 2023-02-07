@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body_block %}
+  {% if request.user.profile.is_seller %}
+    <form method="POST">
+      {% csrf_token %}
+      {{form|crispy}}
+      <br>
+      <input type="submit" value="Upload" class="btn btn-success">
+    </form>
+  {% else %}
+    <h2 class="alert alert-info">A non-seller account cannot upload product.</h2>
+  {% endif %}
+{% endblock %}

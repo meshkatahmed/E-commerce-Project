@@ -8,23 +8,19 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'order_app:cart' %}">
-              Cart<span class="badge badge-light">{{request.user|cart_total}}</span>
-            </a>
-          </li>
-          <li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-            id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">{{request.user.profile.username}}</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a href="{% url 'login_app:profile' %}" class="dropdown-item">Profile</a>
-              <a href="{% url 'payment_app:orders' %}" class="dropdown-item">Orders</a>
-              <div class="dropdown-divider"></div>
-              <a href="{% url 'login_app:logout' %}" class="dropdown-item">Logout</a>
-            </div>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'order_app:cart' %}">
+          Cart {{request.user|cart_total}}</a></li>
+          {% if request.user.profile.is_seller %}
+            <li class="nav-item"><span>{{request.user.profile.username}}(Seller)</li>
+          {% else %}
+            <li class="nav-item">{{request.user.profile.username}}</li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login_app:profile' %}">Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'payment_app:orders' %}">Orders</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login_app:logout' %}">Logout</a></li>
         {% else %}
-          <li class="nav-item"><a class="btn btn-primary" href="{% url 'login_app:login' %}">Login</a></li>
+          <li class="nav-item"><a class="btn btn-secondary" href="{% url 'login_app:login' %}"><span>Login</span></a></li>
+          <li class="nav-item"><a class="btn btn-primary" href="{% url 'login_app:signup' %}"><span>Register</span></a></li>
         {% endif %}
       </ul>
     </div>
