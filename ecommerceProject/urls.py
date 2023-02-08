@@ -18,7 +18,8 @@ from django.urls import path,include
 
 #To show media files
 from django.conf import settings
-from django.contrib.staticfiles.urls import static,staticfiles_urlpatterns
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),

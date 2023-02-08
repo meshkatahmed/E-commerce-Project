@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 # Create your models here.
 class Category(models.Model):
     title = models.CharField(max_length=20)
@@ -11,7 +12,7 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
 class Product(models.Model):
-    mainimage = models.ImageField(upload_to = 'products',blank=True)
+    mainimage = models.ImageField(upload_to='products',blank=True)
     name = models.CharField(max_length=264)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='category')
     preview_text = models.TextField(max_length=200,verbose_name='Preview Text')

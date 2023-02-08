@@ -11,17 +11,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR.joinpath('templates')
 STATIC_DIR = BASE_DIR.joinpath('static')
 MEDIA_DIR = BASE_DIR.joinpath('media')
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-bf=d@k)0vs@ugi^1$+nv+sq(+mfken-%&u%vd)6upd54x&5e8b'
 
@@ -67,7 +64,7 @@ ROOT_URLCONF = 'ecommerceProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR,],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,11 +124,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = [STATIC_DIR,]
+STATIC_ROOT = [STATIC_DIR]
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'MEDIA_DIR'
+MEDIA_ROOT = MEDIA_DIR
 
 
 
