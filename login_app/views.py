@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponseRedirect
+from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.urls import reverse
 from django.http import HttpResponse
 
@@ -31,9 +31,10 @@ def login_user(request):
     if request.method=='POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=password)
+            credentials = form.clean()
+            #Bohubrihi - username = form.cleaned_data.get('username')
+            #Bohubrihi - password = form.cleaned_data.get('password')
+            user = authenticate(username=credentials['username'],password=credentials['password'])
             if user is not None:
                 login(request,user)
                 return HttpResponseRedirect(reverse('shop_app:home'))

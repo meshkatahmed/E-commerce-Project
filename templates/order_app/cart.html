@@ -24,14 +24,14 @@
               {{cart.quantity}}
               <a class="mr-2" href="{% url 'order_app:increasequantity' pk=cart.item.pk %}"><span class="badge badge-light">+</span></a>
             </td>
-            <td align="right">&#2547;{{cart.get_total}}</td>
+            <td align="left">&#2547;{{cart.get_total}}</td>
             <td><a href="{% url 'order_app:removefromcart' pk=cart.item.pk %}" class="btn btn-danger btn-sm">Remove From Cart</a></td>
           </tr>
         {% endfor %}
         <tr>
           <th scope="row"></th>
           <td colspan="2">Total</td>
-          <td align="right">&#2547;{{order.get_totals|floatformat:2}}</td>
+          <td align="left">&#2547;{{order.get_totals|floatformat:2}}</td>
           <td></td>
         </tr>
         <tr>

@@ -30,9 +30,7 @@ def checkout(request):
             form = BillingForm(instance = working_address)
             messages.info(request,'Your shipping address is saved!')
     order_qs = Order.objects.filter(user=request.user,ordered=False)
-    print(order_qs)
     order_items = order_qs[0].orderitems.all()
-    print(order_items)
     order_total = order_qs[0].get_totals()
     diction = {'form':form,'order_items':order_items,'order_total':order_total,
     'working_address':working_address}

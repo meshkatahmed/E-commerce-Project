@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block body_block %}
   {% if request.user.profile.is_seller %}
-    <form method="POST">
+    <form enctype="multipart/form-data" method="POST">
       {% csrf_token %}
       {{form|crispy}}
       <br>

@@ -33,10 +33,10 @@ def add_to_cart(request,pk):
 @login_required
 def cart_view(request):
     carts = Cart.objects.filter(user=request.user,purchased=False)
-    orders = Order.objects.filter(user=request.user,ordered=False)
-    if carts.exists() and orders.exists():
-        order = orders[0]
-        diction = {'carts':carts,'order':order}
+    #Bohubrihi - orders = Order.objects.filter(user=request.user,ordered=False)
+    if carts.exists():#Bohubrihi - and orders.exists():
+        #Bohubrihi - order = orders[0]
+        diction = {'carts':carts}##Bohubrihi - ,'order':order}
         return render(request,'order_app/cart.html',context=diction)
     else:
         messages.warning(request,"You don't have any item in your cart!")
