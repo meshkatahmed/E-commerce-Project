@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required
-def checkout(request):
+def checkout(request,get_discount):
     saved_address = BillingAddress.objects.get_or_create(user=request.user)
     working_address = saved_address[0]
     form = BillingForm(instance = working_address)
@@ -31,7 +31,10 @@ def checkout(request):
             messages.info(request,'Your shipping address is saved!')
     order_qs = Order.objects.filter(user=request.user,ordered=False)
     order_items = order_qs[0].orderitems.all()
-    order_total = order_qs[0].get_totals()
+    if get_discount=='True':
+        order_total = order_qs[0].discounted_totals()
+    else:
+        order_total = order_qs[0].get_totals()
     diction = {'form':form,'order_items':order_items,'order_total':order_total,
     'working_address':working_address}
     return render(request,'payment_app/checkout.html',context=diction)

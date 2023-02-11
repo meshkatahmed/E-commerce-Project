@@ -1,9 +1,14 @@
-from django.shortcuts import render,get_object_or_404,redirect
-#Authentications
+from django.http import HttpResponse
+from django.shortcuts import render,redirect,get_object_or_404,redirect
+#Decorators and mixins
 from django.contrib.auth.decorators import login_required
-#Models
+from django.contrib.auth.mixins import LoginRequiredMixin
+#Class-based views
+from django.views.generic import FormView
+#Models and forms
 from .models import Cart,Order
 from shop_app.models import Product
+from .forms import CouponForm
 #Messages
 from django.contrib import messages
 # Create your views here.
@@ -33,10 +38,10 @@ def add_to_cart(request,pk):
 @login_required
 def cart_view(request):
     carts = Cart.objects.filter(user=request.user,purchased=False)
-    #Bohubrihi - orders = Order.objects.filter(user=request.user,ordered=False)
+    orders = Order.objects.filter(user=request.user,ordered=False)
     if carts.exists():#Bohubrihi - and orders.exists():
-        #Bohubrihi - order = orders[0]
-        diction = {'carts':carts}##Bohubrihi - ,'order':order}
+        order = orders[0]
+        diction = {'carts':carts,'order':order}
         return render(request,'order_app/cart.html',context=diction)
     else:
         messages.warning(request,"You don't have any item in your cart!")
@@ -108,3 +113,29 @@ def decrease_quantity(request,pk):
     else:
         messages.info(request,"You don't have an active order")
         return redirect('shop_app:home')
+
+class ApplyCoupon(LoginRequiredMixin,FormView):
+    form_class = CouponForm
+    template_name = 'order_app/applycoupon.html'
+
+    def form_valid(self,form):
+        if form.match_code():
+            return redirect('order_app:couponmatchedcart')
+        return redirect('order_app:couponunmatchedcart')
+
+@login_required
+def coupon_matched_cart(request):
+    carts = Cart.objects.filter(user=request.user,purchased=False)
+
+    if carts.exists():
+        messages.success(request,'Coupon code matched!!')
+        active_orders = Order.objects.filter(user=request.user,ordered=False)
+        diction = {'carts':carts,'order':active_orders[0],'get_discount':True}
+        return render(request,'order_app/cart.html',context=diction)
+    messages.warning(request,"You don't have an active order!!")
+    return redirect('shop_app:home')
+
+@login_required
+def coupon_unmatched_cart(request):
+    messages.info(request,'Coupon code not matched!!')
+    return redirect('order_app:cart')

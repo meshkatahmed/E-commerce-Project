@@ -34,11 +34,24 @@
           <td align="left">&#2547;{{order.get_totals|floatformat:2}}</td>
           <td></td>
         </tr>
+        {% if get_discount %}
+          <tr>
+            <th scope="row"></th>
+            <td colspan="2">Discounted Price</td>
+            <td>&#2547;{{order.discounted_totals}}</td>
+            <td></td>
+          </tr>
+        {% endif %}
         <tr>
           <th scope="row"></th>
           <td colspan="4" class="text-right">
             <a href="{% url 'shop_app:home' %}" class="btn btn-warning mr-4">Continue Shopping</a>
-            <a href="{% url 'payment_app:checkout' %}" class="btn btn-success mr-4">Proceed to Checkout</a>
+            {% if get_discount %}
+              <a href="{% url 'payment_app:checkout' get_discount=True %}" class="btn btn-success mr-4">Proceed to Checkout</a>
+            {% else %}
+              <a href="{% url 'payment_app:checkout' get_discount=False %}" class="btn btn-success mr-4">Proceed to Checkout</a>
+              <a href="{% url 'order_app:applycoupon' %}" class="btn btn-info mr-4">Apply Coupon Code</a>
+            {% endif %}
           </td>
         </tr>
       </tbody>
