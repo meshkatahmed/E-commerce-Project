@@ -5,6 +5,6 @@ class CouponForm(forms.Form):
 
     def match_code(self):
         cleaned_data = super().clean()
-        if cleaned_data['code']=='xxx':
+        if cleaned_data['code']=='DDD':
             return True
         return False

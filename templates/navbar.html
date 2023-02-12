@@ -10,10 +10,9 @@
         {% if request.user.is_authenticated %}
           <li class="nav-item"><a class="nav-link" href="{% url 'order_app:cart' %}">
           Cart {{request.user|cart_total}}</a></li>
+          <li class="nav-item">{{request.user.profile.username}}</li>
           {% if request.user.profile.is_seller %}
-            <li class="nav-item"><span>{{request.user.profile.username}}(Seller)</li>
-          {% else %}
-            <li class="nav-item">{{request.user.profile.username}}</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'shop_app:productupload' %}">Add a Product</a></li>
           {% endif %}
           <li class="nav-item"><a class="nav-link" href="{% url 'login_app:profile' %}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'payment_app:orders' %}">Orders</a></li>
